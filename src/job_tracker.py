@@ -1,19 +1,20 @@
-print("CCNA Job Tracker Bot is starting...")
+import os
+from dotenv import load_dotenv
 
-job_keywords = [
-    "NOC Technician",
-    "Network Technician",
-    "Junior Network Administrator",
-    "CCNA",
-    "Help Desk Network"
-]
+# Load variables from .env
+load_dotenv()
 
-location = "San Antonio, TX"
+# Read values from .env
+app_id = os.getenv("ADZUNA_APP_ID")
+app_key = os.getenv("ADZUNA_APP_KEY")
+location = os.getenv("LOCATION")
 
-print("Searching for entry-level networking jobs...")
-print("Location:", location)
+print("CCNA Job Tracker Bot")
+print("--------------------")
+print(f"Location: {location}")
 
-for keyword in job_keywords:
-    print("Search keyword:", keyword)
-
-print("Job search complete.")
+# Security check
+if app_id and app_key:
+    print("API credentials loaded successfully.")
+else:
+    print("ERROR: API credentials not found.")
