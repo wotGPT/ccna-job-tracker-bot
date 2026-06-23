@@ -1,19 +1,60 @@
 import os
+import requests
 from dotenv import load_dotenv
 
-# Load variables from .env
 load_dotenv()
 
-# Read variables from .env
-app_id = os.getenv("ADZUNA_APP_ID")
-app_key = os.getenv("ADZUNA_APP_KEY")
-location = os.getenv("LOCATION")
+APP_ID = os.getenv("ADZUNA_APP_ID")
+APP_KEY = os.getenv("ADZUNA_APP_KEY")
+LOCATION = os.getenv("LOCATION")
 
-print("CCNA Job Tracker Bot")
-print("--------------------")
-print(f"Location: {location}")
+SEARCH_TERMS = [
+    "NOC Technician",
+    "Network Technician",
+    "Junior Network Administrator",
+    "Network Support Technician",
+    "Help Desk Network",
+    "CCNA"
+]
 
-if app_id and app_key:
-    print("SUCCESS: API credentials loaded.")
-else:
-    print("ERROR: API credentials not found.")
+url = "https://api.adzuna.com/v1/api/jobs/us/search/1"
+
+for term in SEARCH_TERMS:
+
+    print()
+    print("=" * 60)
+    print(f"Searching for: {term}")
+    print("=" * 60)
+
+    params = {
+        "app_id": APP_ID,
+        "app_key": APP_KEY,
+        "what": term,
+        "where": LOCATION,
+        "results_per_page": 5
+    }
+
+    response = requests.get(url, params=params)
+
+    print("Status Code:", response.status_code)
+
+    data = response.json()
+
+    jobs = data.get("results", [])
+
+    print("Jobs Found:", len(jobs))
+
+    for job in jobs:
+
+        title = job.get("title", "Unknown Title")
+
+        company = job.get(
+            "company", {}
+        ).get(
+            "display_name",
+            "Unknown Company"
+        )
+
+        print()
+        print(f"Title: {title}")
+        print(f"Company: {company}")
